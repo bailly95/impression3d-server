@@ -30,11 +30,10 @@ export const getProduct = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  
   const product = req.body;
   const files = req.files;
   const selectedFile = [];
-  
+
   for (const file of files) {
     const { path } = file;
     selectedFile.push(path);
@@ -42,19 +41,52 @@ export const createProduct = async (req, res) => {
   const newProduct = new Product({
     ...product,
     createdAt: new Date().toISOString(),
-    selectedFile:selectedFile
+    selectedFile: selectedFile,
   });
 
   try {
     await newProduct.save();
-
     res.status(201).json(newProduct);
   } catch (error) {
-    console.log("erreur")
+    console.log("erreur");
     res.status(409).json({ message: error.message });
   }
 };
 
-export const updateProduct = async (req, res) => {};
+export const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
 
-export const deleteProduct = async (req, res) => {};
+  await Product.findByIdAndRemove(id);
+
+  res.json({ message: "Post deleted successfully." });
+};
+
+export const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, description, updateImage } = req.body;
+  const files = req.files;
+  const selectedFile = [];
+  let tmpImage = updateImage.split(",");
+  //test si vide
+
+  if (updateImage !== "") {
+    let tmpImage = updateImage.split(",");
+    for (const path of tmpImage) {
+      selectedFile.push(path);
+    }
+  }
+  for (const file of files) {
+    const { path } = file;
+    selectedFile.push(path);
+  }
+
+  const updatedProduct = {
+    name,
+    description,
+    selectedFile,
+  };
+  await Product.findByIdAndUpdate(id, updatedProduct, { new: true });
+  res.json(updatedProduct);
+};

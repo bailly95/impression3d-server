@@ -5,19 +5,19 @@ import {
   getProduct,
   getLastProducts,
   createProduct,
-  // updateProduct,
-  // deleteProduct
+  updateProduct,
+  deleteProduct
 } from "../controllers/product.js";
 
 const router = express.Router();
 
-//http://localhost:5000/product
+//http://localhost:5000/products
 
 router.get("/", getProducts);
 router.get("/last", getLastProducts);
 router.get("/:id", getProduct);
 router.post("/", uploadProducts.any("selectedFile"), createProduct);
-// router.patch("/:id", updateProduct);
-// router.delete("/:id", deleteProduct);
+router.patch("/:id",uploadProducts.any("selectedFile"), updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
