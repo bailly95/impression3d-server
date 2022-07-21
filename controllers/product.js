@@ -57,19 +57,15 @@ export const deleteProduct = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No post with id: ${id}`);
-
   await Product.findByIdAndRemove(id);
-
   res.json({ message: "Post deleted successfully." });
 };
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, description, updateImage } = req.body;
+  const { name, description, updateImage,category } = req.body;
   const files = req.files;
   const selectedFile = [];
-  let tmpImage = updateImage.split(",");
-  //test si vide
 
   if (updateImage !== "") {
     let tmpImage = updateImage.split(",");
@@ -77,6 +73,7 @@ export const updateProduct = async (req, res) => {
       selectedFile.push(path);
     }
   }
+
   for (const file of files) {
     const { path } = file;
     selectedFile.push(path);
@@ -85,8 +82,10 @@ export const updateProduct = async (req, res) => {
   const updatedProduct = {
     name,
     description,
+    category,
     selectedFile,
   };
+
   await Product.findByIdAndUpdate(id, updatedProduct, { new: true });
   res.json(updatedProduct);
 };
