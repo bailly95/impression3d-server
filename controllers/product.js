@@ -63,7 +63,7 @@ export const deleteProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, description, updateImage,category } = req.body;
+  const { name, description, updateImage,category,sizefixed,sizestd,sizemin,sizemax } = req.body;
   const files = req.files;
   const selectedFile = [];
 
@@ -84,6 +84,10 @@ export const updateProduct = async (req, res) => {
     description,
     category,
     selectedFile,
+    sizefixed,
+    sizestd,
+    sizemin,
+    sizemax
   };
 
   await Product.findByIdAndUpdate(id, updatedProduct, { new: true });

@@ -15,17 +15,3 @@ const requestSchema = mongoose.Schema({
 
 export default mongoose.model("Request", requestSchema);
 
-
-import mongoose from "mongoose";
-
-const requestSchema = mongoose.Schema({
-  idClient: { type: String, required: true },
-  idProduct: { type: String, required: true },
-  status: { type: String, required: true },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-});
-
-export default mongoose.model("Request", requestSchema);
